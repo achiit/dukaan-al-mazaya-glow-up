@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AL MAZAYA GLOW UP | Luxury Skincare & Beauty</title>
+  <!-- React & ReactDOM CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- Babel Compiler -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0F0F11;
+      color: #E5E5E5;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0F0F11;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D4AF37;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const BRAND_DETAILS = {
+      name: "AL MAZAYA GLOW UP",
+      tagline: "BEAUTY THAT SHINES",
+      subTagline: "ADVANCED BEAUTY CREAM • PEARL • SHINE",
+      address: "Mahabubnagar, Telangana 509001, India",
+      whatsapp: "+919346165461",
+      whatsappFormatted: "+91 9346165461",
+      email: "support@almazayaglowup.com",
+      currency: "₹"
+    };
+
+    const INITIAL_PRODUCTS = [
+      {
+        id: "prod-1",
+        name: "Pearl Shine Advanced Beauty Cream",
+        sku: "AMG-BC-001",
+        category: "Creams",
+        price: 1499,
+        discountPrice: 1199,
+        rating: 4.9,
+        reviewsCount: 128,
+        stock: 45,
+        isFeatured: true,
+        isBestSeller: true,
+        isNewArrival: false,
+        images: [
+          "https://images.unsplash.com/photo-1608248597266-c89050df2386?auto=format&fit=crop&q=80&w=800",
+          "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=800"
+        ],
+        sizes: ["30g", "50g", "100g"],
+        description: "Our signature formula crafted with real pearl powder extract, botanical brightening agents, and hyaluronic acid for an instant radiant glow and deep hydration.",
+        ingredients: "Pearl Powder Extract, Niacinamide, Hyaluronic Acid, Organic Rosehip Oil, Licorice Root Extract, Vitamin E.",
+        benefits: ["Restores natural skin radiance", "Fades dark spots & hyperpigmentation", "24-Hour intense moisture seal"],
+        howToUse: "Apply a small pea-sized amount evenly onto cleansed face and neck twice daily."
+      },
+      {
+        id: "prod-2",
+        name: "Royal Gold Facial Glow Elixir Serum",
+        sku: "AMG-SR-002",
+        category: "Serums",
+        price: 2299,
+        discountPrice: 1899,
+        rating: 4.8,
+        reviewsCount: 94,
+        stock: 18,
+        isFeatured: true,
+        isBestSeller: true,
+        isNewArrival: true,
+        images: [
+          "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=800"
+        ],
+        sizes: ["30ml", "50ml"],
+        description: "An ultra-luxurious skin oil infused with pure 24K gold flakes and botanical antioxidants to nourish aging skin.",
+        ingredients: "24K Gold Particles, Rosehip Seed Oil, Argan Oil, Bakuchiol, Vitamin C.",
+        benefits: ["Visibly reduces fine lines", "Deep cellular rejuvenation", "Non-greasy satin finish"],
+        howToUse: "Warm 3-4 drops in palms and press into skin after cleansing."
+      },
+      {
+        id: "prod-3",
+        name: "Hydra Brighten Silk Cleanser",
+        sku: "AMG-CL-003",
+        category: "Cleansers",
+        price: 899,
+        discountPrice: 749,
+        rating: 4.7,
+        reviewsCount: 62,
+        stock: 60,
+        isFeatured: false,
+        isBestSeller: false,
+        isNewArrival: true,
+        images: [
+          "https://images.unsplash.com/photo-1556228722-d119f01b1076?auto=format&fit=crop&q=80&w=800"
+        ],
+        sizes: ["150ml", "250ml"],
+        description: "Sulfate-free pH balanced gel cleanser that dissolves waterproof makeup without stripping natural skin moisture.",
+        ingredients: "Aloe Vera Juice, Chamomile Water, Glycerin, Green Tea Extract.",
+        benefits: ["Deep pore purification", "Calms redness and irritation"],
+        howToUse: "Massage 1-2 pumps onto damp face for 60 seconds, then rinse."
+      },
+      {
+        id: "prod-4",
+        name: "Complete Pearl Radiance Glow Kit",
+        sku: "AMG-KT-006",
+        category: "Radiance Kits",
+        price: 3999,
+        discountPrice: 3199,
+        rating: 5.0,
+        reviewsCount: 156,
+        stock: 22,
+        isFeatured: true,
+        isBestSeller: true,
+        isNewArrival: true,
+        images: [
+          "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&q=80&w=800"
+        ],
+        sizes: ["Full Set"],
+        description: "The ultimate 3-step luxury skincare regime containing our Silk Cleanser, Glow Elixir Serum, and Pearl Shine Cream.",
+        ingredients: "Full suite of natural extracts, 24K gold particles, and authentic pearl powder.",
+        benefits: ["Complete skin transformation", "Save 25% compared to individual items"],
+        howToUse: "Follow Cleanse -> Serum -> Beauty Cream ritual morning and night."
+      }
+    ];
+
+    const INITIAL_ORDERS = [
+      {
+        id: "AMG-ORD-8821",
+        date: "2026-09-28",
+        customer: { name: "Ananya Sharma", email: "ananya@example.com", phone: "+91 9876543210", city: "Mahabubnagar", address: "H.No 4-2-110, Clock Tower Area", pincode: "509001" },
+        items: [{ id: "prod-1", name: "Pearl Shine Advanced Beauty Cream", quantity: 2, price: 1199, size: "50g" }],
+        subtotal: 2398,
+        discount: 479,
+        shipping: 0,
+        total: 1919,
+        paymentMethod: "Razorpay (UPI)",
+        paymentStatus: "Paid",
+        status: "Shipped",
+        trackingId: "DTDC99218201"
+      }
+    ];
+
+    function App() {
+      const [products, setProducts] = useState(() => JSON.parse(localStorage.getItem('amg_products')) || INITIAL_PRODUCTS);
+      const [orders, setOrders] = useState(() => JSON.parse(localStorage.getItem('amg_orders')) || INITIAL_ORDERS);
+      const [cart, setCart] = useState(() => JSON.parse(localStorage.getItem('amg_cart')) || []);
+      const [wishlist, setWishlist] = useState(() => JSON.parse(localStorage.getItem('amg_wishlist')) || []);
+      const [cmsContent, setCmsContent] = useState(() => JSON.parse(localStorage.getItem('amg_cms')) || {
+        heroTitle: "BEAUTY THAT SHINES WITH PEARL PERFECTION",
+        heroSubtitle: "Experience the ultimate skin rejuvenation with AL MAZAYA GLOW UP Pearl Shine Advanced Beauty Cream.",
+        promoBannerText: "✨ SPECIAL OFFER: Use code GLOW20 for 20% OFF on all orders above ₹1000 + Free Express Shipping across India! ✨"
+      });
+
+      const [currentTab, setCurrentTab] = useState('home');
+      const [selectedProduct, setSelectedProduct] = useState(null);
+      const [selectedCategory, setSelectedCategory] = useState('All');
+      const [searchQuery, setSearchQuery] = useState('');
+      const [appliedCoupon, setAppliedCoupon] = useState(null);
+      const [couponInput, setCouponInput] = useState('');
+
+      const [isAdminMode, setIsAdminMode] = useState(false);
+      const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+      const [adminSubTab, setAdminSubTab] = useState('dashboard');
+      const [adminLoginCreds, setAdminLoginCreds] = useState({ email: '', password: '' });
+      const [adminAuthError, setAdminAuthError] = useState('');
+
+      const [activeOrder, setActiveOrder] = useState(null);
+      const [checkoutForm, setCheckoutForm] = useState({
+        name: '', email: '', phone: '', address: '', city: 'Mahabubnagar', state: 'Telangana', pincode: '509001', paymentMethod: 'Razorpay'
+      });
+      const [isRazorpayModalOpen, setIsRazorpayModalOpen] = useState(false);
+      const [toast, setToast] = useState(null);
+
+      useEffect(() => { localStorage.setItem('amg_products', JSON.stringify(products)); }, [products]);
+      useEffect(() => { localStorage.setItem('amg_orders', JSON.stringify(orders)); }, [orders]);
+      useEffect(() => { localStorage.setItem('amg_cart', JSON.stringify(cart)); }, [cart]);
+      useEffect(() => { localStorage.setItem('amg_wishlist', JSON.stringify(wishlist)); }, [wishlist]);
+      useEffect(() => { localStorage.setItem('amg_cms', JSON.stringify(cmsContent)); }, [cmsContent]);
+
+      useEffect(() => {
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+      });
+
+      const showToast = (message) => {
+        setToast(message);
+        setTimeout(() => setToast(null), 3000);
+      };
+
+      const addToCart = (product, size = '50g') => {
+        const cartItemId = `${product.id}-${size}`;
+        setCart(prev => {
+          const exists = prev.find(i => i.cartItemId === cartItemId);
+          if (exists) {
+            return prev.map(i => i.cartItemId === cartItemId ? { ...i, quantity: i.quantity + 1 } : i);
+          }
+          return [...prev, {
+            cartItemId,
+            id: product.id,
+            name: product.name,
+            price: product.discountPrice || product.price,
+            image: product.images[0],
+            size,
+            quantity: 1
+          }];
+        });
+        showToast(`Added "${product.name}" to cart`);
+      };
+
+      const updateCartQty = (cartItemId, delta) => {
+        setCart(prev => prev.map(i => {
+          if (i.cartItemId === cartItemId) {
+            const q = i.quantity + delta;
+            return q > 0 ? { ...i, quantity: q } : null;
+          }
+          return i;
+        }).filter(Boolean));
+      };
+
+      const cartSubtotal = useMemo(() => cart.reduce((acc, i) => acc + (i.price * i.quantity), 0), [cart]);
+      const discountAmount = useMemo(() => appliedCoupon ? Math.round((cartSubtotal * 20) / 100) : 0, [cartSubtotal, appliedCoupon]);
+      const shippingFee = cartSubtotal > 1500 || cart.length === 0 ? 0 : 99;
+      const cartGrandTotal = Math.max(0, cartSubtotal - discountAmount + shippingFee);
+
+      const applyCoupon = () => {
+        if (couponInput.toUpperCase() === 'GLOW20') {
+          setAppliedCoupon({ code: 'GLOW20', discount: 20 });
+          showToast('Coupon GLOW20 Applied! 20% OFF');
+        } else {
+          showToast('Invalid Coupon Code (Use GLOW20)');
+        }
+      };
+
+      const handlePlaceOrder = (e) => {
+        e.preventDefault();
+        if (checkoutForm.paymentMethod === 'Razorpay') {
+          setIsRazorpayModalOpen(true);
+        } else {
+          finalizeOrder('Cash on Delivery', 'Pending');
+        }
+      };
+
+      const finalizeOrder = (paymentMethod, paymentStatus) => {
+        const newOrder = {
+          id: `AMG-ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+          date: new Date().toISOString().split('T')[0],
+          customer: { ...checkoutForm },
+          items: [...cart],
+          subtotal: cartSubtotal,
+          discount: discountAmount,
+          shipping: shippingFee,
+          total: cartGrandTotal,
+          paymentMethod,
+          paymentStatus,
+          status: 'Confirmed',
+          trackingId: `AMG-TRK-${Math.floor(100000 + Math.random() * 900000)}`
+        };
+
+        setOrders([newOrder, ...orders]);
+        setActiveOrder(newOrder);
+        setCart([]);
+        setIsRazorpayModalOpen(false);
+        setCurrentTab('order-success');
+        showToast('Order Placed Successfully! 🎉');
+      };
+
+      const filteredProducts = useMemo(() => {
+        return products.filter(p => {
+          const matchCat = selectedCategory === 'All' || p.category === selectedCategory;
+          const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+          return matchCat && matchSearch;
+        });
+      }, [products, selectedCategory, searchQuery]);
+
+      return (
+        <div className="min-h-screen flex flex-col justify-between">
+          
+          {/* Top Announcement Bar */}
+          <div className="bg-gradient-to-r from-[#1A1810] via-[#D4AF37]/30 to-[#1A1810] border-b border-[#D4AF37]/30 text-xs py-2 px-4 text-center text-[#F3E5AB] flex justify-between items-center">
+            <span className="hidden md:inline text-[#D4AF37] font-semibold">✨ {BRAND_DETAILS.tagline}</span>
+            <div className="mx-auto truncate">{cmsContent.promoBannerText}</div>
+            <button 
+              onClick={() => setIsAdminMode(!isAdminMode)} 
+              className="text-[10px] bg-[#D4AF37]/20 hover:bg-[#D4AF37] hover:text-black border border-[#D4AF37]/40 px-2.5 py-1 rounded text-[#D4AF37] transition-all font-bold"
+            >
+              {isAdminMode ? "Store View" : "🔑 Admin Portal"}
+            </button>
+          </div>
+
+          {!isAdminMode ? (
+            <div>
+              {/* Header */}
+              <header className="sticky top-0 z-40 bg-[#121215]/90 backdrop-blur-md border-b border-[#D4AF37]/20">
+                <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between gap-4">
+                  <div onClick={() => setCurrentTab('home')} className="flex items-center gap-3 cursor-pointer">
+                    <div className="w-10 h-10 rounded-full border-2 border-[#D4AF37] bg-[#1A1810] flex items-center justify-center text-[#D4AF37]">
+                      ✨
+                    </div>
+                    <div>
+                      <h1 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#AA7C11]">
+                        AL MAZAYA
+                      </h1>
+                      <p className="text-[9px] tracking-widest text-[#D4AF37]/80 uppercase font-semibold">GLOW UP</p>
+                    </div>
+                  </div>
+
+                  <nav className="hidden md:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider">
+                    {['home', 'shop', 'tracking', 'about', 'contact'].map(t => (
+                      <button key={t} onClick={() => setCurrentTab(t)} className={`hover:text-[#D4AF37] ${currentTab === t ? 'text-[#D4AF37] border-b-2 border-[#D4AF37] pb-1' : 'text-gray-300'}`}>
+                        {t === 'tracking' ? 'Track Order' : t}
+                      </button>
+                    ))}
+                  </nav>
+
+                  <div className="flex items-center gap-4">
+                    <button onClick={() => setCurrentTab('cart')} className="relative bg-[#D4AF37]/10 border border-[#D4AF37]/40 p-2.5 rounded-full text-[#D4AF37] flex items-center gap-2">
+                      🛒 <span className="font-bold text-xs hidden sm:inline">₹{cartSubtotal}</span>
+                      {cart.length > 0 && (
+                        <span className="bg-[#D4AF37] text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                          {cart.reduce((a,b)=>a+b.quantity,0)}
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </header>
+
+              <main>
+                {/* 1. HOME TAB */}
+                {currentTab === 'home' && (
+                  <div>
+                    <section className="py-20 px-4 max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                      <div className="space-y-6 text-center md:text-left">
+                        <span className="bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-bold px-3 py-1 rounded-full uppercase">
+                          Luxury Skincare Formulation
+                        </span>
+                        <h1 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
+                          {cmsContent.heroTitle}
+                        </h1>
+                        <p className="text-gray-300 text-sm max-w-lg">
+                          {cmsContent.heroSubtitle}
+                        </p>
+                        <div className="flex justify-center md:justify-start gap-4">
+                          <button onClick={() => setCurrentTab('shop')} className="bg-[#D4AF37] text-black font-bold px-8 py-3.5 rounded-full shadow-lg hover:scale-105 transition-all text-sm">
+                            Shop Products
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex justify-center">
+                        <img src="https://images.unsplash.com/photo-1608248597266-c89050df2386?auto=format&fit=crop&q=80&w=800" alt="Beauty Cream" className="w-80 h-80 object-cover rounded-full border-4 border-[#D4AF37]/40 shadow-2xl" />
+                      </div>
+                    </section>
+
+                    {/* Featured Products */}
+                    <section className="max-w-7xl mx-auto px-4 py-12 border-t border-gray-800">
+                      <h2 className="text-2xl font-bold text-white mb-8 text-center">Bestselling Pearl Radiance Products</h2>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {products.map(p => (
+                          <div key={p.id} className="bg-[#1A1A20] border border-[#D4AF37]/20 rounded-2xl p-4 space-y-3">
+                            <img src={p.images[0]} alt={p.name} className="w-full h-48 object-cover rounded-xl" />
+                            <span className="text-[10px] text-[#D4AF37] font-bold uppercase">{p.category}</span>
+                            <h3 className="font-bold text-white text-base">{p.name}</h3>
+                            <p className="text-xs text-gray-400 line-clamp-2">{p.description}</p>
+                            <div className="flex justify-between items-center pt-2 border-t border-gray-800">
+                              <span className="font-extrabold text-white text-lg">₹{p.discountPrice || p.price}</span>
+                              <button onClick={() => addToCart(p)} className="bg-[#D4AF37] text-black font-bold text-xs px-4 py-2 rounded-xl">
+                                Add To Cart
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  </div>
+                )}
+
+                {/* 2. SHOP CATALOG TAB */}
+                {currentTab === 'shop' && (
+                  <div className="max-w-7xl mx-auto px-4 py-10 space-y-6">
+                    <div className="flex flex-col md:flex-row justify-between gap-4">
+                      <h1 className="text-2xl font-bold text-white">Product Collection</h1>
+                      <div className="flex gap-4">
+                        <input 
+                          type="text" 
+                          placeholder="Search..." 
+                          value={searchQuery} 
+                          onChange={e => setSearchQuery(e.target.value)}
+                          className="bg-[#1A1A20] border border-gray-700 text-xs px-3 py-2 rounded-xl text-white"
+                        />
+                        <select 
+                          value={selectedCategory} 
+                          onChange={e => setSelectedCategory(e.target.value)}
+                          className="bg-[#1A1A20] border border-gray-700 text-xs px-3 py-2 rounded-xl text-white"
+                        >
+                          <option value="All">All Categories</option>
+                          <option value="Creams">Creams</option>
+                          <option value="Serums">Serums</option>
+                          <option value="Cleansers">Cleansers</option>
+                          <option value="Radiance Kits">Radiance Kits</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredProducts.map(p => (
+                        <div key={p.id} className="bg-[#1A1A20] border border-gray-800 p-4 rounded-xl space-y-3">
+                          <img src={p.images[0]} alt={p.name} className="w-full h-48 object-cover rounded-lg" />
+                          <h3 className="font-bold text-white text-sm">{p.name}</h3>
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold text-[#D4AF37]">₹{p.discountPrice || p.price}</span>
+                            <button onClick={() => addToCart(p)} className="bg-[#D4AF37] text-black font-bold text-xs px-3 py-1.5 rounded-lg">
+                              Add
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. CART TAB */}
+                {currentTab === 'cart' && (
+                  <div className="max-w-4xl mx-auto px-4 py-10 space-y-6">
+                    <h1 className="text-2xl font-bold text-white">Your Shopping Cart</h1>
+                    {cart.length > 0 ? (
+                      <div className="grid md:grid-cols-3 gap-8">
+                        <div className="md:col-span-2 space-y-4">
+                          {cart.map(item => (
+                            <div key={item.cartItemId} className="bg-[#1A1A20] border border-gray-800 p-4 rounded-xl flex items-center justify-between">
+                              <img src={item.image} alt="" className="w-16 h-16 object-cover rounded-lg" />
+                              <div className="flex-1 px-4">
+                                <h4 className="font-bold text-xs text-white">{item.name}</h4>
+                                <p className="text-[11px] text-[#D4AF37]">₹{item.price}</p>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <button onClick={() => updateCartQty(item.cartItemId, -1)} className="px-2 py-1 bg-gray-800 rounded text-xs">-</button>
+                                <span className="text-xs font-bold">{item.quantity}</span>
+                                <button onClick={() => updateCartQty(item.cartItemId, 1)} className="px-2 py-1 bg-gray-800 rounded text-xs">+</button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="bg-[#1A1A20] border border-[#D4AF37]/30 p-6 rounded-2xl h-fit space-y-4 text-xs">
+                          <h3 className="font-bold text-white text-sm border-b border-gray-800 pb-2">Order Summary</h3>
+                          <div className="flex justify-between text-gray-300">
+                            <span>Subtotal</span>
+                            <span>₹{cartSubtotal}</span>
+                          </div>
+                          {discountAmount > 0 && (
+                            <div className="flex justify-between text-green-400">
+                              <span>Coupon Discount</span>
+                              <span>-₹{discountAmount}</span>
+                            </div>
+                          )}
+                          <div className="flex justify-between font-bold text-white text-base border-t border-gray-800 pt-2">
+                            <span>Grand Total</span>
+                            <span className="text-[#D4AF37]">₹{cartGrandTotal}</span>
+                          </div>
+                          <button onClick={() => setCurrentTab('checkout')} className="w-full bg-[#D4AF37] text-black font-bold py-3 rounded-xl text-xs">
+                            Proceed to Checkout
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-16 bg-[#1A1A20] rounded-2xl">
+                        <p className="text-gray-400 text-sm">Your cart is currently empty.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 4. CHECKOUT TAB */}
+                {currentTab === 'checkout' && (
+                  <div className="max-w-3xl mx-auto px-4 py-10">
+                    <h1 className="text-2xl font-bold text-white mb-6">Checkout</h1>
+                    <form onSubmit={handlePlaceOrder} className="bg-[#1A1A20] border border-gray-800 p-6 rounded-2xl space-y-4 text-xs">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-gray-400 block mb-1">Full Name</label>
+                          <input required type="text" value={checkoutForm.name} onChange={e => setCheckoutForm({...checkoutForm, name: e.target.value})} className="w-full bg-[#121215] border border-gray-700 p-2.5 rounded-lg text-white" />
+                        </div>
+                        <div>
+                          <label className="text-gray-400 block mb-1">Phone (WhatsApp)</label>
+                          <input required type="text" value={checkoutForm.phone} onChange={e => setCheckoutForm({...checkoutForm, phone: e.target.value})} className="w-full bg-[#121215] border border-gray-700 p-2.5 rounded-lg text-white" />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-gray-400 block mb-1">Shipping Address</label>
+                        <textarea required rows={2} value={checkoutForm.address} onChange={e => setCheckoutForm({...checkoutForm, address: e.target.value})} className="w-full bg-[#121215] border border-gray-700 p-2.5 rounded-lg text-white"></textarea>
+                      </div>
+                      <div>
+                        <label className="text-gray-400 block mb-1">Payment Method</label>
+                        <select value={checkoutForm.paymentMethod} onChange={e => setCheckoutForm({...checkoutForm, paymentMethod: e.target.value})} className="w-full bg-[#121215] border border-gray-700 p-2.5 rounded-lg text-white">
+                          <option value="Razorpay">Razorpay Online (UPI / Card)</option>
+                          <option value="COD">Cash on Delivery</option>
+                        </select>
+                      </div>
+                      <button type="submit" className="w-full bg-[#D4AF37] text-black font-bold py-3 rounded-xl text-xs">
+                        Pay & Place Order (₹{cartGrandTotal})
+                      </button>
+                    </form>
+                  </div>
+                )}
+
+                {/* 5. ORDER SUCCESS */}
+                {currentTab === 'order-success' && activeOrder && (
+                  <div className="max-w-xl mx-auto px-4 py-16 text-center space-y-4">
+                    <h1 className="text-3xl font-bold text-white">Order Confirmed! 🎉</h1>
+                    <p className="text-gray-400 text-xs">Order ID: <span className="text-[#D4AF37] font-bold">{activeOrder.id}</span></p>
+                    <p className="text-gray-400 text-xs">Tracking ID: <span className="text-white font-bold">{activeOrder.trackingId}</span></p>
+                    <button onClick={() => setCurrentTab('shop')} className="bg-[#D4AF37] text-black font-bold px-6 py-2.5 rounded-full text-xs">
+                      Continue Shopping
+                    </button>
+                  </div>
+                )}
+
+                {/* 6. TRACKING TAB */}
+                {currentTab === 'tracking' && (
+                  <div className="max-w-md mx-auto px-4 py-12 text-xs">
+                    <h1 className="text-xl font-bold text-white mb-4 text-center">Track Your Package</h1>
+                    <div className="bg-[#1A1A20] border border-gray-800 p-6 rounded-xl space-y-3">
+                      <input type="text" id="trackId" placeholder="Enter Order ID e.g. AMG-ORD-8821" className="w-full bg-[#121215] border border-gray-700 p-2.5 rounded-lg text-white" />
+                      <button onClick={() => {
+                        const val = document.getElementById('trackId').value;
+                        const found = orders.find(o => o.id === val);
+                        if(found) setActiveOrder(found);
+                        else showToast('Order not found');
+                      }} className="w-full bg-[#D4AF37] text-black font-bold py-2.5 rounded-lg">Track Order</button>
+                      
+                      {activeOrder && (
+                        <div className="border-t border-gray-800 pt-4 space-y-2">
+                          <p className="text-gray-400">Status: <span className="text-[#D4AF37] font-bold">{activeOrder.status}</span></p>
+                          <p className="text-gray-400">Destination: {activeOrder.customer.city}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </main>
+
+              {/* Footer */}
+              <footer className="bg-[#0A0A0C] border-t border-[#D4AF37]/20 py-8 text-center text-xs text-gray-500">
+                <p>© 2026 AL MAZAYA GLOW UP. All rights reserved. {BRAND_DETAILS.address}</p>
+                <p className="mt-1">WhatsApp Customer Care: {BRAND_DETAILS.whatsappFormatted}</p>
+              </footer>
+            </div>
+          ) : (
+
+            /* ADMIN PORTAL PANEL */
+            <div className="flex-1 p-8 max-w-6xl mx-auto w-full">
+              {!isAdminLoggedIn ? (
+                <div className="max-w-sm mx-auto bg-[#1A1A20] border border-[#D4AF37]/30 p-6 rounded-2xl space-y-4 text-xs">
+                  <h2 className="text-xl font-bold text-white text-center">Admin Authentication</h2>
+                  {adminAuthError && <p className="text-red-400">{adminAuthError}</p>}
+                  <input type="email" placeholder="admin@almazaya.com" value={adminLoginCreds.email} onChange={e => setAdminLoginCreds({...adminLoginCreds, email: e.target.value})} className="w-full bg-[#121215] border border-gray-700 p-2.5 rounded-lg text-white" />
+                  <input type="password" placeholder="glowup2026" value={adminLoginCreds.password} onChange={e => setAdminLoginCreds({...adminLoginCreds, password: e.target.value})} className="w-full bg-[#121215] border border-gray-700 p-2.5 rounded-lg text-white" />
+                  <button onClick={() => {
+                    if(adminLoginCreds.email === 'admin@almazaya.com' && adminLoginCreds.password === 'glowup2026') {
+                      setIsAdminLoggedIn(true);
+                      setAdminAuthError('');
+                    } else {
+                      setAdminAuthError('Use admin@almazaya.com / glowup2026');
+                    }
+                  }} className="w-full bg-[#D4AF37] text-black font-bold py-2.5 rounded-lg">Login</button>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center border-b border-gray-800 pb-4">
+                    <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
+                    <button onClick={() => setIsAdminLoggedIn(false)} className="text-xs text-red-400 underline">Logout</button>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 text-xs">
+                    <div className="bg-[#1A1A20] border border-gray-800 p-4 rounded-xl">
+                      <p className="text-gray-400">Total Revenue</p>
+                      <p className="text-xl font-bold text-[#D4AF37]">₹{orders.reduce((a,b)=>a+b.total,0)}</p>
+                    </div>
+                    <div className="bg-[#1A1A20] border border-gray-800 p-4 rounded-xl">
+                      <p className="text-gray-400">Total Orders</p>
+                      <p className="text-xl font-bold text-white">{orders.length}</p>
+                    </div>
+                    <div className="bg-[#1A1A20] border border-gray-800 p-4 rounded-xl">
+                      <p className="text-gray-400">Active Products</p>
+                      <p className="text-xl font-bold text-green-400">{products.length}</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-[#1A1A20] border border-gray-800 rounded-xl p-4 text-xs">
+                    <h3 className="font-bold text-white mb-3">Recent Orders</h3>
+                    {orders.map(o => (
+                      <div key={o.id} className="flex justify-between border-b border-gray-800 py-2">
+                        <div>
+                          <p className="font-bold text-[#D4AF37]">{o.id}</p>
+                          <p className="text-gray-400">{o.customer.name} - ₹{o.total}</p>
+                        </div>
+                        <select value={o.status} onChange={(e) => {
+                          setOrders(orders.map(item => item.id === o.id ? { ...item, status: e.target.value } : item));
+                        }} className="bg-[#121215] border border-gray-700 text-white rounded p-1">
+                          <option value="Confirmed">Confirmed</option>
+                          <option value="Shipped">Shipped</option>
+                          <option value="Delivered">Delivered</option>
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Razorpay Simulation Modal */}
+          {isRazorpayModalOpen && (
+            <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+              <div className="bg-[#1A1C23] border border-blue-500 rounded-2xl max-w-xs w-full p-6 text-center space-y-4 text-xs">
+                <p className="font-bold text-blue-400">RAZORPAY PAYMENT MOCK</p>
+                <p className="text-2xl font-extrabold text-white">₹{cartGrandTotal}</p>
+                <button onClick={() => finalizeOrder('Razorpay (UPI)', 'Paid')} className="w-full bg-blue-600 text-white font-bold py-2.5 rounded-lg">
+                  Simulate Successful Payment
+                </button>
+                <button onClick={() => setIsRazorpayModalOpen(false)} className="text-gray-400 underline">Cancel</button>
+              </div>
+            </div>
+          )}
+
+          {/* Toast Notification */}
+          {toast && (
+            <div className="fixed bottom-6 right-6 bg-[#D4AF37] text-black font-bold text-xs px-4 py-2.5 rounded-xl shadow-2xl">
+              {toast}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
